@@ -1,0 +1,12 @@
+# MariaDB 10.11 RedHatEnterpriseLinux repository list - created 2024-05-12 03:14 UTC
+# https://mariadb.org/download/
+[mariadb]
+name = MariaDB
+# rpm.mariadb.org is a dynamic mirror if your preferred mirror goes offline. See https://mariadb.org/mirrorbits/ for details.
+# baseurl = https://rpm.mariadb.org/10.11/rhel/$releasever/$basearch
+baseurl = https://ftp.yz.yamagata-u.ac.jp/pub/dbms/mariadb/yum/10.11/rhel/$releasever/$basearch
+module_hotfixes = 1
+# gpgkey = https://rpm.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgkey = https://ftp.yz.yamagata-u.ac.jp/pub/dbms/mariadb/yum/RPM-GPG-KEY-MariaDB
+gpgcheck = 1
+enabled = 1

@@ -1,14 +1,14 @@
 FROM almalinux:8
 MAINTAINER koi-chan
 
-ENV groonga_version=13.0.5 \
-    mroonga_version=13.05  \
-    mariadb_version=10.11.4
+ENV groonga_version=14.0.4 \
+    mroonga_version=14.04  \
+    mariadb_version=10.11.8
 
 ENV LANG C.UTF-8
 
-ENV mariadb_rpm_uri=https://archive.mariadb.org/mariadb-10.11.4/yum/rhel8-amd64/rpms/ \
-    mariadb_rpm_filename=MariaDB-server-10.11.4-1.el8.x86_64.rpm
+ENV mariadb_rpm_uri=https://archive.mariadb.org/mariadb-${mariadb_version}/yum/rhel8-amd64/rpms/ \
+    mariadb_rpm_filename=MariaDB-server-${mariadb_version}-1.el8.x86_64.rpm
 
 COPY MariaDB.repo /etc/yum.repos.d/
 
@@ -22,7 +22,7 @@ RUN dnf install -y \
     dnf config-manager --enable epel
 
 # yum で最新版を自動取得させると、バージョン指定の齟齬が出てインストールできない
-COPY Dockerfile MariaDB-* /tmp/
+COPY Dockerfile MariaDB-*-${mariadb_version}-* /tmp/
 RUN for name in server client common shared devel; do \
       target=`echo $mariadb_rpm_filename |sed -e "s/server/${name}/"` && \
       if [ ! -f /tmp/${target} ]; then \
@@ -65,4 +65,4 @@ EXPOSE 3306
 HEALTHCHECK --start-period=5m \
     CMD mariadb -e 'SELECT @@datadir;' || exit 1
 
-CMD ["mariadbd"]     
+CMD ["mariadbd"]

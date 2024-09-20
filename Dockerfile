@@ -1,9 +1,9 @@
 FROM almalinux:8
 MAINTAINER koi-chan
 
-ENV groonga_version=14.0.4 \
-    mroonga_version=14.04  \
-    mariadb_version=10.11.8
+ENV groonga_version=14.0.7 \
+    mroonga_version=14.07  \
+    mariadb_version=11.4.3
 
 ENV LANG C.UTF-8
 
@@ -41,7 +41,7 @@ RUN dnf install -y \
 VOLUME /var/lib/mysql
 
 RUN dnf install -y \
-      mariadb-10.11-mroonga-${mroonga_version} && \
+      mariadb-11.4-mroonga-${mroonga_version} && \
     dnf clean all
 
 # Install gosu.  https://github.com/tianon/gosu

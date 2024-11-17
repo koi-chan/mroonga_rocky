@@ -1,9 +1,9 @@
 FROM almalinux:8
 MAINTAINER koi-chan
 
-ENV groonga_version=14.0.7 \
-    mroonga_version=14.07  \
-    mariadb_version=11.4.3
+ENV groonga_version=14.1.0 \
+    mroonga_version=14.10  \
+    mariadb_version=11.4.4
 
 ENV LANG C.UTF-8
 
@@ -23,6 +23,7 @@ RUN dnf install -y \
 
 # yum で最新版を自動取得させると、バージョン指定の齟齬が出てインストールできない
 COPY Dockerfile MariaDB-*-${mariadb_version}-* /tmp/
+COPY groonga-libs-14.1.0* /tmp/
 RUN for name in server client common shared devel; do \
       target=`echo $mariadb_rpm_filename |sed -e "s/server/${name}/"` && \
       if [ ! -f /tmp/${target} ]; then \
@@ -32,6 +33,7 @@ RUN for name in server client common shared devel; do \
 
 RUN dnf install -y \
 #      MariaDB-{server,client,common,shared,devel} && \
+      /tmp/groonga-libs-14.1.0* \
       /tmp/MariaDB* && \
     rm -f /tmp/MariaDB* && \
     rm -rf /var/lib/mysql && \

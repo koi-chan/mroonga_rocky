@@ -1,9 +1,9 @@
 FROM almalinux:8
 MAINTAINER koi-chan
 
-ENV groonga_version=14.1.0 \
-    mroonga_version=14.10  \
-    mariadb_version=11.4.4
+ENV groonga_version=15.2.5 \
+    mroonga_version=15.25  \
+    mariadb_version=11.4.10
 
 ENV LANG C.UTF-8
 
@@ -15,7 +15,8 @@ COPY MariaDB.repo /etc/yum.repos.d/
 RUN dnf install -y \
       epel-release \
       wget \
-      https://packages.groonga.org/almalinux/8/groonga-release-latest.noarch.rpm && \
+      https://packages.groonga.org/almalinux/8/groonga-release-latest.noarch.rpm \
+      https://packages.groonga.org/almalinux/8/x86_64/Packages/apache-arrow-release-23.0.0-1.el8.noarch.rpm && \
     dnf module -y disable mysql && \
     dnf module -y disable mariadb && \
     dnf config-manager --enable powertools && \
@@ -23,7 +24,7 @@ RUN dnf install -y \
 
 # yum で最新版を自動取得させると、バージョン指定の齟齬が出てインストールできない
 COPY Dockerfile MariaDB-*-${mariadb_version}-* /tmp/
-COPY groonga-libs-14.1.0* /tmp/
+COPY groonga-libs-${groonga_version}-* /tmp/
 RUN for name in server client common shared devel; do \
       target=`echo $mariadb_rpm_filename |sed -e "s/server/${name}/"` && \
       if [ ! -f /tmp/${target} ]; then \
@@ -33,9 +34,9 @@ RUN for name in server client common shared devel; do \
 
 RUN dnf install -y \
 #      MariaDB-{server,client,common,shared,devel} && \
-      /tmp/groonga-libs-14.1.0* \
-      /tmp/MariaDB* && \
-    rm -f /tmp/MariaDB* && \
+      /tmp/groonga-libs-* \
+      /tmp/MariaDB-* && \
+    rm -f /tmp/MariaDB* /tmp/groonga-libs-* && \
     rm -rf /var/lib/mysql && \
     mkdir /var/lib/mysql && \
     chown -R mysql.mysql /var/lib/mysql
